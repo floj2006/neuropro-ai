@@ -1,0 +1,128 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: dark;
+  --bg: #0b0d12;
+  --bg-2: #0f1320;
+  --surface: #12162a;
+  --surface-2: #171c34;
+  --border: rgba(120, 130, 255, 0.22);
+  --text: #e6e9ff;
+  --muted: #a8b0d6;
+  --neon: #7f5cff;
+  --neon-2: #28d7ff;
+  --accent: #b86bff;
+}
+
+* {
+  border-color: var(--border);
+}
+
+body {
+  background: radial-gradient(1200px 800px at 10% -10%, rgba(79, 89, 255, 0.25), transparent 60%),
+    radial-gradient(1000px 700px at 90% 0%, rgba(40, 215, 255, 0.2), transparent 55%),
+    radial-gradient(900px 600px at 50% 120%, rgba(184, 107, 255, 0.16), transparent 60%),
+    var(--bg);
+  color: var(--text);
+  font-family: var(--font-space), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+}
+
+code,
+.font-mono {
+  font-family: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
+    'Courier New', monospace;
+}
+
+::selection {
+  background: rgba(126, 92, 255, 0.35);
+  color: #fff;
+}
+
+.bg-grid {
+  background-image: linear-gradient(transparent 0%, transparent 96%, rgba(120, 130, 255, 0.08) 100%),
+    linear-gradient(90deg, transparent 0%, transparent 96%, rgba(120, 130, 255, 0.08) 100%);
+  background-size: 28px 28px;
+}
+
+.glass {
+  background: rgba(15, 19, 32, 0.68);
+  border: 1px solid rgba(120, 130, 255, 0.18);
+  box-shadow: 0 30px 80px rgba(4, 6, 20, 0.55);
+  backdrop-filter: blur(18px);
+}
+
+.glow {
+  box-shadow: 0 0 18px rgba(127, 92, 255, 0.6), 0 0 48px rgba(40, 215, 255, 0.25);
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.9s ease-out both;
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.section {
+  padding: 5rem 0;
+}
+
+.section-tight {
+  padding: 3.5rem 0;
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 640px) {
+  .section {
+    padding: 3rem 0;
+  }
+  
+  .section-tight {
+    padding: 2rem 0;
+  }
+}
+
+.neon-text {
+  color: var(--neon);
+  text-shadow: 0 0 18px rgba(127, 92, 255, 0.7);
+}
+
+.neon-border {
+  border-color: rgba(127, 92, 255, 0.55);
+  box-shadow: 0 0 24px rgba(127, 92, 255, 0.15);
+}
+
+/* Улучшения для тач-устройств */
+@media (hover: none) and (pointer: coarse) {
+  /* Увеличиваем области клика */
+  button, a {
+    min-height: 44px;
+  }
+  
+  /* Отключаем hover эффекты на тач-устройствах */
+  .glow:hover {
+    box-shadow: 0 0 18px rgba(127, 92, 255, 0.6), 0 0 48px rgba(40, 215, 255, 0.25);
+  }
+}
