@@ -103,7 +103,7 @@ export default function AdminUsers({ users }: { users: UserItem[] }) {
                     <p className="text-xs text-[color:var(--muted)]">{user.email}</p>
                     <div className="mt-2 flex flex-wrap gap-2 md:hidden">
                       <Badge>{roleLabels[user.role]}</Badge>
-                      <Badge variant="outline">{user.status}</Badge>
+                      <Badge className="border-white/20 bg-white/5 text-white">{user.status}</Badge>
                     </div>
                   </div>
                 </div>
@@ -111,7 +111,7 @@ export default function AdminUsers({ users }: { users: UserItem[] }) {
                   <Badge>{roleLabels[user.role]}</Badge>
                 </div>
                 <div className="hidden items-center gap-2 md:flex">
-                  <Badge variant="outline">{user.status}</Badge>
+                  <Badge className="border-white/20 bg-white/5 text-white">{user.status}</Badge>
                 </div>
                 <div className="text-xs text-[color:var(--muted)]">{user.createdAt}</div>
                 <div className="flex justify-start md:justify-end">

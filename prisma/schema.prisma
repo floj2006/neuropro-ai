@@ -22,9 +22,17 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
-  accounts      Account[]
-  sessions      Session[]
-  purchases     Purchase[]
+  accounts       Account[]
+  sessions       Session[]
+  purchases      Purchase[]
+  certificates   Certificate[]
+  bookmarks      Bookmark[]
+  assignments    Assignment[]
+  quizAttempts   QuizAttempt[]
+  referral       Referral?
+  subscription   Subscription?
+  reviews        Review[]
+  notifications  Notification[]
 }
 
 model Account {
@@ -76,7 +84,7 @@ model Purchase {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, courseId])
 }
@@ -158,4 +166,185 @@ model TgCourseProgress {
   user TgUser @relation(fields: [tgUserId], references: [id], onDelete: Cascade)
 
   @@unique([tgUserId, courseSlug])
+}
+
+// Трекинг прогресса уроков
+model LessonProgress {
+  id        String   @id @default(cuid())
+  userId    String
+  courseId  String
+  moduleId  Int
+  lessonId  Int
+  completed Boolean  @default(false)
+  completedAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, courseId, moduleId, lessonId])
+  @@index([userId, courseId])
+}
+
+// Видео для уроков
+model Video {
+  id        String   @id @default(cuid())
+  courseId  String
+  moduleId  Int
+  lessonId  Int
+  title     String
+  videoUrl  String   // YouTube/Vimeo URL или путь к файлу
+  duration  Int?     // длительность в секундах
+  provider  String   @default("youtube") // youtube, vimeo, local
+  videoId   String?  // ID видео для embed
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([courseId])
+  @@unique([courseId, moduleId, lessonId])
+}
+
+// Сертификаты
+model Certificate {
+  id        String   @id @default(cuid())
+  userId    String
+  courseId  String
+  certificateUrl String?
+  certificateId String @unique
+  issuedAt  DateTime @default(now())
+  studentName String
+  courseName String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
+  @@index([userId])
+}
+
+// Закладки
+model Bookmark {
+  id        String   @id @default(cuid())
+  userId    String
+  courseId  String
+  moduleId  Int
+  lessonId  Int
+  note      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId, moduleId, lessonId])
+  @@index([userId])
+}
+
+// Домашние задания
+model Assignment {
+  id        String   @id @default(cuid())
+  userId    String
+  courseId  String
+  moduleId  Int
+  lessonId  Int
+  content   String
+  status    String   @default("pending") // pending, submitted, reviewed, rejected
+  feedback  String?
+  submittedAt DateTime?
+  reviewedAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, status])
+}
+
+// Тесты/квизы
+model Quiz {
+  id        String   @id @default(cuid())
+  courseId  String
+  moduleId  Int
+  title     String
+  questions Json  // [{question, options, correct}]
+  createdAt DateTime @default(now())
+
+  attempts QuizAttempt[]
+}
+
+model QuizAttempt {
+  id        String   @id @default(cuid())
+  quizId    String
+  userId    String
+  answers   Json    // [selected options]
+  score     Float   // 0-100
+  createdAt DateTime @default(now())
+
+  quiz Quiz @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// Промокоды
+model PromoCode {
+  id        String   @id @default(cuid())
+  code      String   @unique
+  discount  Float    // процент скидки
+  maxUses   Int?
+  usedCount Int      @default(0)
+  expiresAt DateTime?
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+// Реферальные ссылки
+model Referral {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  code      String   @unique
+  uses      Int      @default(0)
+  earnings  Float    @default(0)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// Подписки
+model Subscription {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  plan      String   // starter, pro, business
+  status    String   @default("active")
+  startDate DateTime
+  endDate   DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// Отзывы
+model Review {
+  id        String   @id @default(cuid())
+  userId    String
+  courseId  String
+  rating    Int      // 1-5
+  comment   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
+  @@index([courseId])
+}
+
+// Уведомления
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  message   String
+  type      String   // course, payment, system
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, read])
 }

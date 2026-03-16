@@ -1,6 +1,6 @@
 ﻿import SectionHeading from './section-heading';
 import { Card } from './ui/card';
-import PayButton from './pay-button';
+import { Button } from './ui/button';
 import { planCards } from '../lib/data/payments';
 
 export default function Pricing() {
@@ -35,11 +35,9 @@ export default function Pricing() {
                 </li>
               ))}
             </ul>
-            <PayButton
-              itemId={plan.id}
-              label="Оплатить"
-              variant={plan.highlight ? 'primary' : 'outline'}
-            />
+            <Button href={`/payment/${plan.id.replace(':', '-')}`} variant={plan.highlight ? 'primary' : 'outline'} className="mt-auto">
+              Оплатить
+            </Button>
           </Card>
         ))}
       </div>

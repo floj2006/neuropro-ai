@@ -6,6 +6,7 @@ import { Card } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
 import { prisma } from '../../lib/prisma';
 import { courses } from '../../lib/data/courses';
+import MyCoursesClient from './my-courses-client';
 
 export const metadata: Metadata = {
   title: 'Личный кабинет',
@@ -32,8 +33,23 @@ export default async function DashboardPage() {
   });
 
   const purchasedCourses = purchases
-    .map((p) => courses.find((c) => c.slug === p.courseId))
-    .filter(Boolean);
+    .map((p) => {
+      const course = courses.find((c) => c.slug === p.courseId);
+      if (!course) return null;
+      return {
+        course: {
+          slug: course.slug,
+          title: course.title,
+          description: course.description,
+          level: course.level,
+          duration: course.duration
+        },
+        progress: 0,
+        completedLessons: 0,
+        totalLessons: 0
+      };
+    })
+    .filter(Boolean) as Array<{ course: { slug: string; title: string; description: string; level: string; duration: string; }; progress: number; completedLessons: number; totalLessons: number }>;
 
   return (
     <div className="pb-20">
@@ -64,45 +80,7 @@ export default async function DashboardPage() {
 
         <div className="mt-10">
           <h2 className="text-xl font-semibold text-white">Мои курсы</h2>
-
-          {purchasedCourses.length > 0 ? (
-            <div className="mt-6 grid gap-6 md:grid-cols-2">
-              {purchasedCourses.map((course) => (
-                <Card key={course!.slug} className="p-6">
-                  <div className="space-y-4">
-                    <div>
-                      <p className="text-xs uppercase tracking-[0.2em] text-[color:var(--muted)]">
-                        {levelLabels[course!.level]}
-                      </p>
-                      <h3 className="mt-2 text-lg font-semibold text-white">{course!.title}</h3>
-                      <p className="mt-2 text-sm text-[color:var(--muted)]">{course!.description}</p>
-                    </div>
-                    <div className="flex items-center gap-4 text-sm text-[color:var(--muted)]">
-                      <span>Длительность: {course!.duration}</span>
-                    </div>
-                    <div className="flex gap-3">
-                      <Button href={`/courses/${course!.slug}`} className="flex-1">
-                        К курсу
-                      </Button>
-                      <Button variant="outline" href={`/courses/${course!.slug}/buy`}>
-                        Прогресс
-                      </Button>
-                    </div>
-                  </div>
-                </Card>
-              ))}
-            </div>
-          ) : (
-            <Card className="mt-6 p-8 text-center">
-              <p className="text-lg text-white">У вас пока нет купленных курсов</p>
-              <p className="mt-2 text-sm text-[color:var(--muted)]">
-                Изучите каталог и выберите подходящий курс
-              </p>
-              <Button href="/courses" className="mt-6">
-                Смотреть каталог
-              </Button>
-            </Card>
-          )}
+          <MyCoursesClient purchasedCourses={purchasedCourses} />
         </div>
 
         <div className="mt-10">
@@ -116,6 +94,23 @@ export default async function DashboardPage() {
               </p>
             </div>
             <Button>Присоединиться</Button>
+          </Card>
+        </div>
+
+        <div className="mt-10">
+          <h2 className="text-xl font-semibold text-white">Документы</h2>
+          <Card className="mt-6 p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold text-white">Мои сертификаты</h3>
+                <p className="mt-1 text-sm text-[color:var(--muted)]">
+                  Сертификаты о прохождении курсов
+                </p>
+              </div>
+              <Button href="/certificates" variant="outline">
+                Посмотреть
+              </Button>
+            </div>
           </Card>
         </div>
       </section>

@@ -1,6 +1,7 @@
 ﻿import { redirect } from 'next/navigation';
 import { auth } from '../../lib/auth';
 import { prisma } from '../../lib/prisma';
+import type { User } from '@prisma/client';
 import { Card } from '../../components/ui/card';
 import AdminUsers from '../../components/admin/admin-users';
 
@@ -37,13 +38,13 @@ export default async function AdminPage() {
     'Доступ к аналитике'
   ];
 
-  const usersPayload = users.map((user) => ({
+  const usersPayload = users.map((user: User) => ({
     id: user.id,
     name: user.name,
     email: user.email,
     role: user.role,
     status: user.status,
-    privileges: Array.isArray(user.privileges) ? user.privileges : [],
+    privileges: Array.isArray(user.privileges) ? (user.privileges as string[]) : null,
     createdAt: user.createdAt.toLocaleDateString('ru-RU')
   }));
 

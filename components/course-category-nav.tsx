@@ -19,7 +19,7 @@ export default function CourseCategoryNav() {
   }, []);
 
   const handleSelect = (category: string) => {
-    setValue(category);
+    setValue(category as typeof courseCategories[number]);
     const element = document.getElementById(toId(category));
     if (element) {
       element.scrollIntoView({ behavior: 'smooth', block: 'start' });

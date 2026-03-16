@@ -1,4 +1,4 @@
-﻿import { PrismaClient, CourseCategory } from '@prisma/client';
+﻿import { PrismaClient, CourseCategory, Prisma } from '@prisma/client';
 import { courses } from '../lib/data/courses';
 
 const prisma = new PrismaClient();
@@ -20,10 +20,10 @@ async function main() {
         price: course.price,
         duration: course.duration,
         level: levelMap[course.level],
-        modules: course.modules,
-        detailedModules: course.detailedModules,
-        outcomes: course.outcomes,
-        whatIncluded: course.whatIncluded
+        modules: course.modules as unknown as Prisma.InputJsonValue,
+        detailedModules: course.detailedModules as unknown as Prisma.InputJsonValue,
+        outcomes: course.outcomes as unknown as Prisma.InputJsonValue,
+        whatIncluded: course.whatIncluded as unknown as Prisma.InputJsonValue
       },
       create: {
         slug: course.slug,
@@ -32,10 +32,10 @@ async function main() {
         price: course.price,
         duration: course.duration,
         level: levelMap[course.level],
-        modules: course.modules,
-        detailedModules: course.detailedModules,
-        outcomes: course.outcomes,
-        whatIncluded: course.whatIncluded
+        modules: course.modules as unknown as Prisma.InputJsonValue,
+        detailedModules: course.detailedModules as unknown as Prisma.InputJsonValue,
+        outcomes: course.outcomes as unknown as Prisma.InputJsonValue,
+        whatIncluded: course.whatIncluded as unknown as Prisma.InputJsonValue
       }
     });
   }

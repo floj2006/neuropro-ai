@@ -57,7 +57,8 @@ export async function POST(req: NextRequest) {
         id: purchase.id,
         courseId: purchase.courseId,
         status: purchase.status
-      }
+      },
+      courseSlug: courseId
     });
   } catch (error) {
     console.error('Purchase error:', error);

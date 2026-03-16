@@ -1,12 +1,10 @@
 ﻿import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { courses } from '../../../lib/data/courses';
-import { coursePaymentIds } from '../../../lib/data/payments';
 import SectionHeading from '../../../components/section-heading';
 import { Badge } from '../../../components/ui/badge';
 import { Button } from '../../../components/ui/button';
 import { Card } from '../../../components/ui/card';
-import PayButton from '../../../components/pay-button';
 
 interface CourseDetailsProps {
   params: { slug: string };
@@ -43,8 +41,6 @@ export default function CourseDetailsPage({ params }: CourseDetailsProps) {
     notFound();
   }
 
-  const paymentId = coursePaymentIds[course.slug];
-
   return (
     <div className="pb-20">
       <section className="section">
@@ -58,9 +54,9 @@ export default function CourseDetailsPage({ params }: CourseDetailsProps) {
               <span>Цена: {course.price}</span>
             </div>
             <div className="flex flex-wrap gap-4">
-              {paymentId ? (
-                <PayButton itemId={paymentId} label="Оплатить курс" size="lg" className="glow" />
-              ) : null}
+              <Button href={`/courses/${course.slug}/payment`} size="lg" className="glow">
+                Оплатить курс
+              </Button>
               <Button href="/contact" variant="outline" size="lg">
                 Узнать больше
               </Button>
@@ -179,9 +175,9 @@ export default function CourseDetailsPage({ params }: CourseDetailsProps) {
             <p className="mt-2 text-sm text-[color:var(--muted)]">Следующий старт: 7 апреля 2026</p>
           </div>
           <div className="flex flex-wrap gap-4">
-            {paymentId ? (
-              <PayButton itemId={paymentId} label="Забронировать место" size="lg" />
-            ) : null}
+            <Button href={`/courses/${course.slug}/payment`} size="lg">
+              Забронировать место
+            </Button>
             <Button variant="outline" size="lg" href="/courses">
               Все курсы
             </Button>
