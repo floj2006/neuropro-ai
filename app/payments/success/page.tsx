@@ -14,18 +14,18 @@ export default function PaymentSuccessPage({ searchParams }: SuccessPageProps) {
     <div className="pb-20">
       <section className="section">
         <SectionHeading
-          eyebrow="Оплата"
-          title="Спасибо! Платёж отправлен"
-          description="Если оплата прошла успешно, вы получите письмо с доступом и деталями." 
+          eyebrow="РћРїР»Р°С‚Р°"
+          title="РЎРїР°СЃРёР±Рѕ! РџР»Р°С‚С‘Р¶ РѕС‚РїСЂР°РІР»РµРЅ"
+          description="Р•СЃР»Рё РѕРїР»Р°С‚Р° РїСЂРѕС€Р»Р° СѓСЃРїРµС€РЅРѕ, РІС‹ РїРѕР»СѓС‡РёС‚Рµ РїРёСЃСЊРјРѕ СЃ РґРѕСЃС‚СѓРїРѕРј Рё РґРµС‚Р°Р»СЏРјРё." 
         />
         <Card className="mt-8 space-y-3 text-sm text-[color:var(--muted)]">
-          {item ? <p>Заказ: {item}</p> : null}
-          <p>Если письмо не пришло в течение 5 минут — напишите в поддержку: hello@neuropro.ai</p>
+          {item ? <p>Р—Р°РєР°Р·: {item}</p> : null}
+          <p>Р•СЃР»Рё РїРёСЃСЊРјРѕ РЅРµ РїСЂРёС€Р»Рѕ РІ С‚РµС‡РµРЅРёРµ 5 РјРёРЅСѓС‚ вЂ” РЅР°РїРёС€РёС‚Рµ РІ РїРѕРґРґРµСЂР¶РєСѓ: hello@neuropro.ai</p>
         </Card>
         <div className="mt-6 flex flex-wrap gap-4">
-          <Button href="/dashboard">Перейти в кабинет</Button>
+          <Button href="/dashboard">РџРµСЂРµР№С‚Рё РІ РєР°Р±РёРЅРµС‚</Button>
           <Link href="/courses" className="text-sm text-[color:var(--neon-2)]">
-            Вернуться к курсам
+            Р’РµСЂРЅСѓС‚СЊСЃСЏ Рє РєСѓСЂСЃР°Рј
           </Link>
         </div>
       </section>
