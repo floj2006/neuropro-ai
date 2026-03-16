@@ -1,34 +1,26 @@
-import Link from 'next/link';
-import SectionHeading from '../../../components/section-heading';
+﻿import Link from 'next/link';
 import { Card } from '../../../components/ui/card';
 import { Button } from '../../../components/ui/button';
 
-interface SuccessPageProps {
-  searchParams?: { item?: string };
-}
-
-export default function PaymentSuccessPage({ searchParams }: SuccessPageProps) {
-  const item = searchParams?.item;
-
+export default function PaymentSuccessPage() {
   return (
-    <div className="pb-20">
-      <section className="section">
-        <SectionHeading
-          eyebrow="Оплата"
-          title="Спасибо! Платёж отправлен"
-          description="Если оплата прошла успешно, вы получите письмо с доступом и деталями." 
-        />
-        <Card className="mt-8 space-y-3 text-sm text-[color:var(--muted)]">
-          {item ? <p>Заказ: {item}</p> : null}
-          <p>Если письмо не пришло в течение 5 минут — напишите в поддержку: hello@neuropro.ai</p>
-        </Card>
-        <div className="mt-6 flex flex-wrap gap-4">
-          <Button href="/dashboard">Перейти в кабинет</Button>
-          <Link href="/courses" className="text-sm text-[color:var(--neon-2)]">
-            Вернуться к курсам
+    <div className="section">
+      <Card className="mx-auto max-w-xl p-8 text-center">
+        <p className="text-xs uppercase tracking-[0.25em] text-[color:var(--neon-2)]">Оплата подтверждена</p>
+        <h1 className="mt-3 text-3xl font-semibold text-white">Спасибо за покупку!</h1>
+        <p className="mt-3 text-sm text-[color:var(--muted)]">
+          Доступ к курсу активирован. Инструкции отправлены на вашу почту.
+        </p>
+        <div className="mt-6 flex flex-wrap justify-center gap-3">
+          <Button href="/dashboard" className="glow">Перейти в кабинет</Button>
+          <Button href="/courses" variant="outline">Смотреть другие курсы</Button>
+        </div>
+        <div className="mt-6 text-xs text-[color:var(--muted)]">
+          <Link href="/contact" className="text-[color:var(--neon-2)]">
+            Нужна помощь? Напишите в поддержку
           </Link>
         </div>
-      </section>
+      </Card>
     </div>
   );
 }
