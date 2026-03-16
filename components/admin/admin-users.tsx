@@ -10,7 +10,6 @@ type UserItem = {
   name: string | null;
   email: string;
   role: 'USER' | 'ADMIN';
-  status: string;
   privileges: string[] | null;
   createdAt: string;
 };
@@ -62,7 +61,6 @@ export default function AdminUsers({ users }: { users: UserItem[] }) {
         body: JSON.stringify({
           name: editing.name,
           role: editing.role,
-          status: editing.status,
           privileges: editing.privileges
         })
       });
@@ -103,16 +101,13 @@ export default function AdminUsers({ users }: { users: UserItem[] }) {
                     <p className="text-xs text-[color:var(--muted)]">{user.email}</p>
                     <div className="mt-2 flex flex-wrap gap-2 md:hidden">
                       <Badge>{roleLabels[user.role]}</Badge>
-                      <Badge className="border-white/20 bg-white/5 text-white">{user.status}</Badge>
                     </div>
                   </div>
                 </div>
                 <div className="hidden items-center gap-2 md:flex">
                   <Badge>{roleLabels[user.role]}</Badge>
                 </div>
-                <div className="hidden items-center gap-2 md:flex">
-                  <Badge className="border-white/20 bg-white/5 text-white">{user.status}</Badge>
-                </div>
+                <div className="hidden items-center gap-2 md:flex"></div>
                 <div className="text-xs text-[color:var(--muted)]">{user.createdAt}</div>
                 <div className="flex justify-start md:justify-end">
                   <Button size="sm" variant="outline" onClick={() => openEdit(user)}>
@@ -171,14 +166,6 @@ export default function AdminUsers({ users }: { users: UserItem[] }) {
                 <input
                   value={editing.name ?? ''}
                   onChange={(event) => setEditing({ ...editing, name: event.target.value })}
-                  className="mt-2 w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-white"
-                />
-              </div>
-              <div>
-                <label className="text-xs uppercase tracking-[0.2em]">Статус</label>
-                <input
-                  value={editing.status}
-                  onChange={(event) => setEditing({ ...editing, status: event.target.value })}
                   className="mt-2 w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-white"
                 />
               </div>
