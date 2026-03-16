@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useMemo, useState } from 'react';
 import SectionHeading from './section-heading';
@@ -6,22 +6,22 @@ import { Card } from './ui/card';
 
 const testimonials = [
   {
-    name: 'Айша Морган',
+    name: 'Алина Морозова',
     role: 'Growth Lead, Cloudward',
     quote:
-      'NeuroPro помог мне автоматизировать 40% операционных воркфлоу за шесть недель. Шаблоны — золото.'
+      'NeuroPro помог мне автоматизировать 40% операционных задач всего за шесть недель. Шаблоны — золото.'
   },
   {
-    name: 'Лео Zhang',
+    name: 'Леонид Жуков',
     role: 'Основатель, Beacon Labs',
     quote:
-      'ИИ-бизнес лаб дал мне чёткую GTM и ценовую стратегию. Мы закрыли первую сделку с enterprise-клиентом.'
+      'ИИ-бизнес лаборатория дала чёткую GTM и ценовую стратегию. Мы закрыли первую enterprise-сделку.'
   },
   {
-    name: 'Прия Наир',
+    name: 'Полина Наумова',
     role: 'Product Manager, Flux',
     quote:
-      'Программа ощущается как премиальный акселератор. Каждый урок приносил немедленный ROI.'
+      'Программа ощущается как премиальный акселератор. Каждый урок приносил понятный ROI.'
   }
 ];
 
@@ -42,8 +42,8 @@ export default function Testimonials() {
     <section className="section">
       <SectionHeading
         eyebrow="Истории успеха"
-        title="Студенты запускают ИИ-победы за недели"
-        description="От автоматизации до дохода — участники NeuroPro быстро достигают результатов."
+        title="Студенты запускают ИИ‑проекты за недели"
+        description="От автоматизации до роста выручки — участники NeuroPro быстро достигают результатов."
       />
       <div className="mt-10 grid gap-6 md:grid-cols-[1.2fr_1fr]">
         <Card className="flex flex-col justify-between gap-6">

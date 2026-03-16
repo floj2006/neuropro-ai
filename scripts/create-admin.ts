@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+﻿import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import readline from 'readline';
 
@@ -29,7 +29,6 @@ async function createAdmin() {
     process.exit(1);
   }
 
-  // Проверяем, существует ли уже пользователь
   const existingUser = await prisma.user.findUnique({
     where: { email }
   });
@@ -39,23 +38,28 @@ async function createAdmin() {
     process.exit(1);
   }
 
-  // Хешируем пароль
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  // Создаём администратора
   const admin = await prisma.user.create({
     data: {
       name,
       email,
       password: hashedPassword,
-      role: 'ADMIN'
+      role: 'ADMIN',
+      status: 'Активен',
+      privileges: [
+        'Полный доступ к пользователям',
+        'Управление ролями',
+        'Просмотр покупок и прогресса',
+        'Доступ к аналитике'
+      ]
     }
   });
 
   console.log('\n✅ Администратор успешно создан!');
   console.log(`   ID: ${admin.id}`);
   console.log(`   Email: ${admin.email}`);
-  console.log(`   Роль: ADMIN\n`);
+  console.log('   Роль: ADMIN\n');
 
   rl.close();
   await prisma.$disconnect();

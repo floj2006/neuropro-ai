@@ -1,4 +1,4 @@
-// Prisma schema для NeuroPro AI
+// Prisma schema Р В Р’В Р вЂ™Р’В Р В РІР‚в„ўР вЂ™Р’В Р В Р’В Р Р†Р вЂљРІвЂћСћР В РІР‚в„ўР вЂ™Р’В Р В Р’В Р вЂ™Р’В Р В Р вЂ Р В РІР‚С™Р Р†РІР‚С›РЎС›Р В Р’В Р Р†Р вЂљРІвЂћСћР В РІР‚в„ўР вЂ™Р’В Р В Р’В Р вЂ™Р’В Р В РІР‚в„ўР вЂ™Р’В Р В Р’В Р В Р вЂ№Р В Р Р‹Р Р†Р вЂљРЎвЂќР В Р’В Р вЂ™Р’В Р В Р’В Р Р†Р вЂљР’В Р В Р’В Р вЂ™Р’В Р В Р вЂ Р В РІР‚С™Р РЋРІвЂћСћР В Р’В Р Р†Р вЂљРІвЂћСћР В РІР‚в„ўР вЂ™Р’ВР В Р’В Р вЂ™Р’В Р В РІР‚в„ўР вЂ™Р’В Р В Р’В Р Р†Р вЂљРІвЂћСћР В РІР‚в„ўР вЂ™Р’В Р В Р’В Р вЂ™Р’В Р В Р вЂ Р В РІР‚С™Р Р†РІР‚С›РЎС›Р В Р’В Р Р†Р вЂљРІвЂћСћР В РІР‚в„ўР вЂ™Р’В Р В Р’В Р вЂ™Р’В Р В РІР‚в„ўР вЂ™Р’В Р В Р’В Р В РІР‚В Р В Р’В Р Р†Р вЂљРЎв„ўР В Р вЂ Р Р†Р вЂљРЎвЂєР РЋРЎвЂєР В Р’В Р вЂ™Р’В Р В Р вЂ Р В РІР‚С™Р Р†РІР‚С›РЎС›Р В Р’В Р Р†Р вЂљРІвЂћСћР В РІР‚в„ўР вЂ™Р’В»Р В Р’В Р вЂ™Р’В Р В РІР‚в„ўР вЂ™Р’В Р В Р’В Р Р†Р вЂљРІвЂћСћР В РІР‚в„ўР вЂ™Р’В Р В Р’В Р вЂ™Р’В Р В РІР‚в„ўР вЂ™Р’В Р В Р’В Р вЂ™Р’В Р В Р вЂ Р В РІР‚С™Р Р†РІР‚С›РІР‚вЂњР В Р’В Р вЂ™Р’В Р В РІР‚в„ўР вЂ™Р’В Р В Р’В Р Р†Р вЂљРІвЂћСћР В РІР‚в„ўР вЂ™Р’В Р В Р’В Р вЂ™Р’В Р В РІР‚в„ўР вЂ™Р’В Р В Р’В Р вЂ™Р’В Р В Р’В Р В Р РЏ NeuroPro AI
 
 generator client {
   provider = "prisma-client-js"
@@ -9,25 +9,24 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Модель пользователя
 model User {
   id            String    @id @default(cuid())
   name          String?
   email         String    @unique
   emailVerified DateTime?
-  password      String?   // Хеш пароля для credentials провайдера
+  password      String?
   image         String?
-  role          Role      @default(USER) // Роль: USER или ADMIN
+  role          Role      @default(USER)
+  status        String    @default("Active")
+  privileges    Json?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
-  
-  // Связи
+
   accounts      Account[]
   sessions      Session[]
   purchases     Purchase[]
 }
 
-// Модель аккаунта (для OAuth провайдеров)
 model Account {
   id                String  @id @default(cuid())
   userId            String
@@ -47,7 +46,6 @@ model Account {
   @@unique([provider, providerAccountId])
 }
 
-// Модель сессии
 model Session {
   id           String   @id @default(cuid())
   sessionToken String   @unique
@@ -56,7 +54,6 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-// Модель верификационного токена
 model VerificationToken {
   identifier String
   token      String   @unique
@@ -65,23 +62,100 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-// Перечисление ролей
 enum Role {
   USER
   ADMIN
 }
 
-// Модель покупки курса
 model Purchase {
   id        String   @id @default(cuid())
   userId    String
-  courseId  String   // slug курса
-  amount    Float    // Сумма покупки
-  status    String   @default("pending") // pending, completed, refunded
+  courseId  String
+  amount    Float
+  status        String    @default("Active")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, courseId]) // Пользователь может купить курс только один раз
+  @@unique([userId, courseId])
+}
+
+enum CourseCategory {
+  BEGINNER
+  AUTOMATION
+  AI_BUSINESS
+  ADVANCED
+}
+
+model Course {
+  id             String         @id @default(cuid())
+  slug           String         @unique
+  title          String
+  description    String
+  price          String
+  duration       String
+  level          CourseCategory
+  modules        Json
+  detailedModules Json
+  outcomes       Json
+  whatIncluded   Json
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+}
+
+model TgPayment {
+  id        String   @id
+  title     String
+  price     String
+  status    String
+  due       String
+  createdAt DateTime @default(now())
+}
+
+model TgActivity {
+  id        String   @id
+  title     String
+  time      String
+  meta      String
+  createdAt DateTime @default(now())
+}
+
+model TgUser {
+  id          String   @id @default(cuid())
+  telegramId  String   @unique
+  name        String
+  role        String
+  status      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  purchases   TgPurchase[]
+  progress    TgCourseProgress[]
+}
+
+model TgPurchase {
+  id          String   @id @default(cuid())
+  tgUserId    String
+  courseSlug  String
+  status      String
+  price       String
+  purchasedAt DateTime @default(now())
+
+  user TgUser @relation(fields: [tgUserId], references: [id], onDelete: Cascade)
+
+  @@unique([tgUserId, courseSlug])
+}
+
+model TgCourseProgress {
+  id         String   @id @default(cuid())
+  tgUserId   String
+  courseSlug String
+  progress   Int
+  nextLesson String
+  updatedAt  DateTime @updatedAt
+
+  user TgUser @relation(fields: [tgUserId], references: [id], onDelete: Cascade)
+
+  @@unique([tgUserId, courseSlug])
 }

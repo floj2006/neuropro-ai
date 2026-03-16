@@ -1,0 +1,57 @@
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes not staged for commit:
+  (use "git add/rm <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	deleted:    DEPLOY.md
+	deleted:    GITHUB_DEPLOY.md
+	deleted:    INSTALL_GIT.md
+	deleted:    QUICK_DEPLOY.md
+	modified:   README.md
+	deleted:    READY_TO_PUSH.md
+	modified:   app/about/page.tsx
+	modified:   app/api/auth/register/route.ts
+	modified:   app/auth/signup/page.tsx
+	modified:   app/contact/page.tsx
+	modified:   app/courses/[slug]/page.tsx
+	modified:   app/courses/page.tsx
+	modified:   app/dashboard/page.tsx
+	modified:   app/globals.css
+	modified:   app/layout.tsx
+	modified:   app/page.tsx
+	modified:   components/course-card.tsx
+	modified:   components/pricing.tsx
+	modified:   components/site-footer.tsx
+	modified:   components/site-header.tsx
+	modified:   components/testimonials.tsx
+	modified:   lib/data/courses.ts
+	modified:   package-lock.json
+	modified:   package.json
+	modified:   prisma/schema.prisma
+	modified:   scripts/create-admin.ts
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	app/admin/
+	app/api/admin/
+	app/api/payments/
+	app/api/tg/
+	app/payments/
+	app/template.tsx
+	components/about-stats.tsx
+	components/admin/
+	components/course-category-nav.tsx
+	components/page-transition.tsx
+	components/pay-button.tsx
+	components/providers.tsx
+	components/scroll-to-top.tsx
+	components/support-widget.tsx
+	components/ui/tabs.tsx
+	cource tg bot/
+	git
+	lib/data/payments.ts
+	lib/tg-data.ts
+	scripts/seed-courses.ts
+
+no changes added to commit (use "git add" and/or "git commit -a")

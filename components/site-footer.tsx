@@ -1,4 +1,5 @@
-import Link from 'next/link';
+﻿import Link from 'next/link';
+import SupportWidget from './support-widget';
 
 export default function SiteFooter() {
   return (
@@ -9,7 +10,7 @@ export default function SiteFooter() {
             Neuro<span className="neon-text">Pro</span>
           </p>
           <p className="mt-3 max-w-xs text-sm text-[color:var(--muted)]">
-            Премиальное ИИ-обучение для разработчиков, операторов и основателей, которые хотят практического мастерства.
+            Премиальное AI-обучение для разработчиков, операторов и основателей, которые хотят практического мастерства.
           </p>
         </div>
         <div className="flex flex-wrap gap-10 text-sm">
@@ -30,14 +31,13 @@ export default function SiteFooter() {
             <Link href="/contact" className="block text-[color:var(--muted)]">
               Контакты
             </Link>
-            <span className="block text-[color:var(--muted)]">Поддержка</span>
-            <span className="block text-[color:var(--muted)]">Сообщество</span>
+            <SupportWidget />
           </div>
         </div>
         <div className="space-y-3 text-sm text-[color:var(--muted)]">
           <p className="font-semibold text-white">Контакты</p>
           <p>hello@neuropro.ai</p>
-          <p>Сан-Франциско • Удалённо по всему миру</p>
+          <p>Челябинск • Удалённо по всему миру</p>
         </div>
       </div>
       <div className="mx-auto mt-10 max-w-6xl px-6 text-xs text-[color:var(--muted)] lg:px-10">
@@ -46,3 +46,4 @@ export default function SiteFooter() {
     </footer>
   );
 }
+

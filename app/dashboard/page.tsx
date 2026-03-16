@@ -1,4 +1,4 @@
-import { Metadata } from 'next';
+﻿import { Metadata } from 'next';
 import { auth } from '../../lib/auth';
 import { redirect } from 'next/navigation';
 import SectionHeading from '../../components/section-heading';
@@ -6,29 +6,34 @@ import { Card } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
 import { prisma } from '../../lib/prisma';
 import { courses } from '../../lib/data/courses';
-import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Личный кабинет',
   description: 'Управляйте своими курсами и прогрессом обучения NeuroPro.'
 };
 
+const levelLabels = {
+  'Beginner': 'Начинающий',
+  'Automation': 'Автоматизация',
+  'AI Business': 'AI-бизнес',
+  'Advanced': 'Продвинутый'
+} as const;
+
 export default async function DashboardPage() {
   const session = await auth();
-  
+
   if (!session?.user) {
-    redirect('/auth/signin');
+    redirect('/auth/signup?callbackUrl=/dashboard');
   }
 
-  // Получаем купленные курсы пользователя
   const purchases = await prisma.purchase.findMany({
     where: { userId: session.user.id, status: 'completed' },
     orderBy: { createdAt: 'desc' }
   });
 
-  const purchasedCourses = purchases.map(p => 
-    courses.find(c => c.slug === p.courseId)
-  ).filter(Boolean);
+  const purchasedCourses = purchases
+    .map((p) => courses.find((c) => c.slug === p.courseId))
+    .filter(Boolean);
 
   return (
     <div className="pb-20">
@@ -38,8 +43,7 @@ export default async function DashboardPage() {
           title="Ваш центр обучения"
           description="Отслеживайте прогресс, возобновляйте занятия и смотрите предстоящие мероприятия."
         />
-        
-        {/* Информация о пользователе */}
+
         <Card className="mt-8 p-6">
           <div className="flex items-center justify-between">
             <div>
@@ -58,10 +62,9 @@ export default async function DashboardPage() {
           </div>
         </Card>
 
-        {/* Купленные курсы */}
         <div className="mt-10">
           <h2 className="text-xl font-semibold text-white">Мои курсы</h2>
-          
+
           {purchasedCourses.length > 0 ? (
             <div className="mt-6 grid gap-6 md:grid-cols-2">
               {purchasedCourses.map((course) => (
@@ -69,7 +72,7 @@ export default async function DashboardPage() {
                   <div className="space-y-4">
                     <div>
                       <p className="text-xs uppercase tracking-[0.2em] text-[color:var(--muted)]">
-                        {course!.level === 'Beginner' ? 'Начинающий' : course!.level === 'Automation' ? 'Автоматизация' : course!.level === 'AI Business' ? 'ИИ-бизнес' : 'Продвинутый'}
+                        {levelLabels[course!.level]}
                       </p>
                       <h3 className="mt-2 text-lg font-semibold text-white">{course!.title}</h3>
                       <p className="mt-2 text-sm text-[color:var(--muted)]">{course!.description}</p>
@@ -93,7 +96,7 @@ export default async function DashboardPage() {
             <Card className="mt-6 p-8 text-center">
               <p className="text-lg text-white">У вас пока нет купленных курсов</p>
               <p className="mt-2 text-sm text-[color:var(--muted)]">
-                Изучите наш каталог и выберите подходящий курс
+                Изучите каталог и выберите подходящий курс
               </p>
               <Button href="/courses" className="mt-6">
                 Смотреть каталог
@@ -102,13 +105,12 @@ export default async function DashboardPage() {
           )}
         </div>
 
-        {/* Предстоящие события */}
         <div className="mt-10">
           <h2 className="text-xl font-semibold text-white">Предстоящие события</h2>
           <Card className="mt-6 flex flex-col justify-between gap-6 p-6 md:flex-row md:items-center">
             <div>
               <p className="text-sm uppercase tracking-[0.2em] text-[color:var(--muted)]">Вебинар</p>
-              <h3 className="text-lg font-semibold text-white">Живая сессия ИИ-бизнес лаба</h3>
+              <h3 className="text-lg font-semibold text-white">Живая сессия AI‑бизнес лаба</h3>
               <p className="mt-2 text-sm text-[color:var(--muted)]">
                 Следующая сессия: 10 апреля 2026 • 10:00 МСК
               </p>

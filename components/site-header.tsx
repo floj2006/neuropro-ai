@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import Link from 'next/link';
 import { useSession, signOut } from 'next-auth/react';
@@ -15,11 +15,11 @@ const navItems = [
 export default function SiteHeader() {
   const { data: session, status } = useSession();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const isAdmin = session?.user?.role === 'ADMIN';
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/5 bg-[color:rgba(10,12,20,0.7)] backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6 lg:px-10">
-        {/* Логотип */}
         <Link href="/" className="flex items-center gap-2">
           <span className="text-lg font-semibold tracking-tight">
             Neuro<span className="neon-text">Pro</span>
@@ -29,7 +29,6 @@ export default function SiteHeader() {
           </span>
         </Link>
 
-        {/* Десктопное меню */}
         <nav className="hidden items-center gap-6 text-sm md:flex">
           {navItems.map((item) => (
             <Link
@@ -40,17 +39,25 @@ export default function SiteHeader() {
               {item.label}
             </Link>
           ))}
+          {isAdmin ? (
+            <Link href="/admin" className="text-[color:var(--neon-2)] transition hover:text-white">
+              Админ
+            </Link>
+          ) : null}
         </nav>
 
-        {/* Кнопки справа */}
         <div className="flex items-center gap-3">
-          {/* Десктопные кнопки */}
           <div className="hidden items-center gap-3 md:flex">
             {status === 'authenticated' ? (
               <>
                 <Link href="/dashboard" className="text-sm text-[color:var(--muted)]">
                   {session.user?.name || 'Кабинет'}
                 </Link>
+                {isAdmin ? (
+                  <Link href="/admin" className="text-sm text-[color:var(--neon-2)]">
+                    Админ
+                  </Link>
+                ) : null}
                 <Button onClick={() => signOut({ callbackUrl: '/' })} variant="outline" size="sm">
                   Выйти
                 </Button>
@@ -67,7 +74,6 @@ export default function SiteHeader() {
             )}
           </div>
 
-          {/* Мобильная кнопка меню */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="flex items-center justify-center rounded-lg p-2 text-[color:var(--muted)] transition hover:bg-white/5 md:hidden"
@@ -84,7 +90,6 @@ export default function SiteHeader() {
         </div>
       </div>
 
-      {/* Мобильное меню */}
       {mobileMenuOpen && (
         <div className="border-t border-white/5 bg-[color:rgba(10,12,20,0.95)] px-6 py-4 md:hidden">
           <nav className="flex flex-col gap-4">
@@ -98,6 +103,15 @@ export default function SiteHeader() {
                 {item.label}
               </Link>
             ))}
+            {isAdmin ? (
+              <Link
+                href="/admin"
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-sm font-semibold text-[color:var(--neon-2)]"
+              >
+                Админ
+              </Link>
+            ) : null}
             <hr className="border-white/10" />
             {status === 'authenticated' ? (
               <>
@@ -106,7 +120,7 @@ export default function SiteHeader() {
                   onClick={() => setMobileMenuOpen(false)}
                   className="text-sm font-semibold text-white"
                 >
-                  👤 {session.user?.name || 'Кабинет'}
+                  Кабинет
                 </Link>
                 <button
                   onClick={() => {

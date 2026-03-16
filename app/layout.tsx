@@ -1,9 +1,10 @@
-import type { Metadata } from 'next';
+﻿import type { Metadata } from 'next';
 import { JetBrains_Mono, Space_Grotesk } from 'next/font/google';
 import './globals.css';
 import SiteHeader from '../components/site-header';
 import SiteFooter from '../components/site-footer';
-import { Providers } from './providers';
+import PageTransition from '../components/page-transition';
+import Providers from '../components/providers';
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ['latin'],
@@ -19,25 +20,23 @@ const jetBrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: 'NeuroPro | Освойте ИИ-навыки быстрее',
+    default: 'NeuroPro | Master AI Skills Faster',
     template: '%s | NeuroPro'
   },
   description:
-    'NeuroPro помогает специалистам освоить ИИ-инструменты, автоматизацию и бизнес-стратегии с помощью премиальных практических курсов.',
+    'NeuroPro helps professionals master AI tools, automation, and AI business strategy with premium, hands-on courses.',
   metadataBase: new URL('https://neuropro.ai'),
   keywords: [
-    'ИИ курсы',
-    'машинное обучение',
-    'ИИ автоматизация',
-    'ИИ бизнес',
-    'NeuroPro',
-    'нейросети',
-    'искусственный интеллект'
+    'AI courses',
+    'machine learning',
+    'AI automation',
+    'AI business',
+    'NeuroPro'
   ],
   openGraph: {
-    title: 'NeuroPro | Освойте ИИ-навыки быстрее',
+    title: 'NeuroPro | Master AI Skills Faster',
     description:
-      'Премиальные ИИ-курсы для разработчиков, операторов и основателей, которые хотят практического мастерства.',
+      'Premium AI courses designed for builders, operators, and founders who want practical AI mastery.',
     url: 'https://neuropro.ai',
     siteName: 'NeuroPro',
     images: [
@@ -48,14 +47,14 @@ export const metadata: Metadata = {
         alt: 'NeuroPro AI Courses'
       }
     ],
-    locale: 'ru_RU',
+    locale: 'en_US',
     type: 'website'
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'NeuroPro | Освойте ИИ-навыки быстрее',
+    title: 'NeuroPro | Master AI Skills Faster',
     description:
-      'Премиальные ИИ-курсы для разработчиков, операторов и основателей, которые хотят практического мастерства.'
+      'Premium AI courses designed for builders, operators, and founders who want practical AI mastery.'
   }
 };
 
@@ -65,13 +64,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ru" className={`${spaceGrotesk.variable} ${jetBrainsMono.variable}`}>
+    <html lang="en" className={`${spaceGrotesk.variable} ${jetBrainsMono.variable}`}>
       <body className="min-h-screen bg-[color:var(--bg)] font-sans text-[color:var(--text)] antialiased">
         <Providers>
           <div className="bg-grid">
             <SiteHeader />
             <main className="mx-auto max-w-6xl px-6 lg:px-10">
-              {children}
+              <PageTransition>{children}</PageTransition>
             </main>
             <SiteFooter />
           </div>

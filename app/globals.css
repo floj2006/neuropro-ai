@@ -16,6 +16,7 @@
 
 * {
   border-color: var(--border);
+  min-width: 0;
 }
 
 body {
@@ -26,6 +27,7 @@ body {
   color: var(--text);
   font-family: var(--font-space), ui-sans-serif, system-ui, -apple-system, sans-serif;
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
 code,
@@ -43,6 +45,14 @@ code,
   background-image: linear-gradient(transparent 0%, transparent 96%, rgba(120, 130, 255, 0.08) 100%),
     linear-gradient(90deg, transparent 0%, transparent 96%, rgba(120, 130, 255, 0.08) 100%);
   background-size: 28px 28px;
+}
+
+img,
+video,
+svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
 }
 
 .glass {
@@ -93,7 +103,7 @@ code,
   padding: 3.5rem 0;
 }
 
-/* Адаптивность для мобильных */
+/* РђРґР°РїС‚РёРІРЅРѕСЃС‚СЊ РґР»СЏ РјРѕР±РёР»СЊРЅС‹С… */
 @media (max-width: 640px) {
   .section {
     padding: 3rem 0;
@@ -101,6 +111,10 @@ code,
   
   .section-tight {
     padding: 2rem 0;
+  }
+
+  .bg-grid {
+    background-size: 22px 22px;
   }
 }
 
@@ -114,15 +128,86 @@ code,
   box-shadow: 0 0 24px rgba(127, 92, 255, 0.15);
 }
 
-/* Улучшения для тач-устройств */
+/* РЈР»СѓС‡С€РµРЅРёСЏ РґР»СЏ С‚Р°С‡-СѓСЃС‚СЂРѕР№СЃС‚РІ */
 @media (hover: none) and (pointer: coarse) {
-  /* Увеличиваем области клика */
+  /* РЈРІРµР»РёС‡РёРІР°РµРј РѕР±Р»Р°СЃС‚Рё РєР»РёРєР° */
   button, a {
     min-height: 44px;
   }
   
-  /* Отключаем hover эффекты на тач-устройствах */
+  /* РћС‚РєР»СЋС‡Р°РµРј hover СЌС„С„РµРєС‚С‹ РЅР° С‚Р°С‡-СѓСЃС‚СЂРѕР№СЃС‚РІР°С… */
   .glow:hover {
     box-shadow: 0 0 18px rgba(127, 92, 255, 0.6), 0 0 48px rgba(40, 215, 255, 0.25);
   }
+}
+@keyframes glitchShift {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0);
+  }
+  10% {
+    opacity: 0.25;
+    transform: translate3d(-3px, 1px, 0);
+  }
+  18% {
+    opacity: 0.08;
+    transform: translate3d(3px, -1px, 0);
+  }
+  28% {
+    opacity: 0.18;
+    transform: translate3d(-2px, 0, 0);
+  }
+  36% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.page-glitch {
+  position: relative;
+}
+
+.page-glitch::before,
+.page-glitch::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  pointer-events: none;
+  opacity: 0;
+  mix-blend-mode: screen;
+  background: linear-gradient(120deg, rgba(127, 92, 255, 0.25), rgba(40, 215, 255, 0.2), transparent 65%);
+  animation: glitchShift 0.9s ease-out;
+}
+
+.page-glitch::after {
+  animation-delay: 0.12s;
+  background: linear-gradient(240deg, rgba(40, 215, 255, 0.2), rgba(127, 92, 255, 0.18), transparent 65%);
+}
+
+.glitch-scanlines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.18;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.05),
+    rgba(255, 255, 255, 0.05) 1px,
+    transparent 1px,
+    transparent 5px
+  );
+  mix-blend-mode: soft-light;
+}
+
+.glitch-flash {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(120deg, rgba(255, 255, 255, 0.12), transparent 60%);
+  animation: glitchShift 0.7s ease-out;
 }

@@ -1,16 +1,19 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { signIn } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Card } from '../../../components/ui/card';
 import { Button } from '../../../components/ui/button';
 
 export default function SignUpPage() {
   const router = useRouter();
-  
-  const [name, setName] = useState('');
+  const searchParams = useSearchParams();
+  const telegramId = searchParams.get('telegramId');
+  const presetName = searchParams.get('name');
+
+  const [name, setName] = useState(presetName ?? '');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -34,11 +37,10 @@ export default function SignUpPage() {
     setIsLoading(true);
 
     try {
-      // Создаём пользователя через API
       const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password })
+        body: JSON.stringify({ name, email, password, telegramId })
       });
 
       const data = await response.json();
@@ -47,7 +49,6 @@ export default function SignUpPage() {
         throw new Error(data.error || 'Ошибка при регистрации');
       }
 
-      // Автоматический вход после регистрации
       const result = await signIn('credentials', {
         email,
         password,
@@ -141,12 +142,7 @@ export default function SignUpPage() {
             />
           </div>
 
-          <Button
-            type="submit"
-            disabled={isLoading}
-            className="w-full glow"
-            size="lg"
-          >
+          <Button type="submit" disabled={isLoading} className="w-full glow" size="lg">
             {isLoading ? 'Регистрация...' : 'Зарегистрироваться'}
           </Button>
         </form>

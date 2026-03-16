@@ -1,5 +1,5 @@
-import Link from 'next/link';
-import { courses } from '../lib/data/courses';
+﻿import Link from 'next/link';
+import { courses, categoryTranslations } from '../lib/data/courses';
 import CourseCard from '../components/course-card';
 import Pricing from '../components/pricing';
 import Testimonials from '../components/testimonials';
@@ -17,11 +17,11 @@ export default function HomePage() {
           <div className="space-y-6">
             <Badge>Будущее за вами</Badge>
             <h1 className="text-4xl font-semibold text-white md:text-5xl">
-              Освойте ИИ-навыки с <span className="neon-text">NeuroPro</span>
+              Освойте ИИ‑навыки с <span className="neon-text">NeuroPro</span>
             </h1>
             <p className="text-lg text-[color:var(--muted)]">
-              Изучите ИИ-инструменты, системы автоматизации и бизнес-стратегии, которые используют 
-              лучшие команды для построения масштабируемого ИИ-бизнеса.
+              Изучите AI‑инструменты, системы автоматизации и бизнес‑стратегии, которыми пользуются лучшие
+              команды для построения масштабируемого AI‑бизнеса.
             </p>
             <div className="flex flex-wrap gap-4">
               <Button href="/courses" size="lg" className="glow">
@@ -40,20 +40,18 @@ export default function HomePage() {
           <Card className="glass animate-float">
             <div className="space-y-6">
               <div className="flex items-center justify-between">
-                <p className="text-sm uppercase tracking-[0.25em] text-[color:var(--muted)]">
-                  Живой поток
-                </p>
+                <p className="text-sm uppercase tracking-[0.25em] text-[color:var(--muted)]">Живой поток</p>
                 <span className="rounded-full border border-white/10 px-3 py-1 text-xs text-[color:var(--neon-2)]">
                   Старт: 7 апреля 2026
                 </span>
               </div>
               <p className="text-2xl font-semibold text-white">
-                Освойте ИИ за 30 дней сguided спринтами и экспертными менторами.
+                Освойте ИИ за 30 дней с guided‑спринтами и экспертными менторами.
               </p>
               <div className="space-y-3 text-sm text-[color:var(--muted)]">
-                <p>✅ Еженедельный коучинг + разбор ИИ-бизнеса</p>
-                <p>✅ Шаблоны, плейбуки и стек автоматизации</p>
-                <p>✅ Пожизненный доступ к обновлениям</p>
+                <p>• Еженедельный коучинг + разбор AI‑бизнеса</p>
+                <p>• Шаблоны, плейбуки и стек автоматизации</p>
+                <p>• Пожизненный доступ к обновлениям</p>
               </div>
               <Button href="/courses" size="lg">
                 Смотреть программу
@@ -73,15 +71,15 @@ export default function HomePage() {
           {[
             {
               title: 'Внедрение ИИ ускоряется',
-              body: 'Компании ожидают ИИ-грамотности от каждой команды. Спрос на квалифицированных специалистов растёт.'
+              body: 'Компании ожидают AI‑грамотности от каждой команды. Спрос на специалистов растёт.'
             },
             {
               title: 'Автоматизация увеличивает маржу',
               body: 'Лучшие команды снижают затраты, ускоряют выполнение и радуют клиентов с помощью ИИ.'
             },
             {
-              title: 'Новые ИИ-бизнес-модели',
-              body: 'Основатели, владеющие ИИ-плейбуками, создают быстрорастущие стартапы.'
+              title: 'Новые AI‑бизнес‑модели',
+              body: 'Основатели, владеющие AI‑плейбуками, строят быстрорастущие стартапы.'
             }
           ].map((item) => (
             <Card key={item.title} className="animate-fade-up">
@@ -98,13 +96,13 @@ export default function HomePage() {
             <SectionHeading
               eyebrow="Программа"
               title="Чему вы научитесь"
-              description="Путь от основ ИИ до продвинутых агентских систем и бизнес-стратегии."
+              description="Путь от основ ИИ до продвинутых агентских систем и бизнес‑стратегии."
             />
             <ul className="space-y-4 text-sm text-[color:var(--muted)]">
-              <li>✅ Создавайте ИИ-воркфлоу с реальными стеками автоматизации</li>
-              <li>✅ Проектируйте ИИ-бизнес-модели и эксперименты</li>
-              <li>✅ Оценивайте модели, надёжность и стратегию данных</li>
-              <li>✅ Запускайте ИИ-продукты с уверенностью и скоростью</li>
+              <li>• Создаёте AI‑воркфлоу с реальными стеками автоматизации</li>
+              <li>• Проектируете AI‑бизнес‑модели и эксперименты</li>
+              <li>• Оцениваете модели, надёжность и стратегию данных</li>
+              <li>• Запускаете AI‑продукты с уверенностью и скоростью</li>
             </ul>
             <Button href="/courses" variant="outline">
               Смотреть программу
@@ -114,7 +112,7 @@ export default function HomePage() {
             {courses.slice(0, 4).map((course) => (
               <Card key={course.slug} className="animate-fade-up">
                 <p className="text-xs uppercase tracking-[0.2em] text-[color:var(--muted)]">
-                  {course.level === 'Beginner' ? 'Начинающий' : course.level === 'Automation' ? 'Автоматизация' : course.level === 'AI Business' ? 'ИИ-бизнес' : 'Продвинутый'}
+                  {categoryTranslations[course.level]}
                 </p>
                 <h3 className="mt-3 text-lg font-semibold text-white">{course.title}</h3>
                 <p className="mt-2 text-sm text-[color:var(--muted)]">{course.description}</p>
@@ -130,16 +128,16 @@ export default function HomePage() {
         <SectionHeading
           eyebrow="Предпросмотр курсов"
           title="Выберите направление обучения по вашим целям"
-          description="Начните с основ или сразу перейдите к автоматизации, ИИ-бизнесу или продвинутым агентам."
+          description="Начните с основ или сразу перейдите к автоматизации, AI‑бизнесу или продвинутым агентам."
         />
         <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {courses.slice(0, 3).map((course) => (
+          {courses.slice(0, 6).map((course) => (
             <CourseCard key={course.slug} course={course} />
           ))}
         </div>
         <div className="mt-8 text-right">
           <Link href="/courses" className="text-sm text-[color:var(--neon-2)]">
-            Смотреть все курсы &gt;
+            Смотреть все курсы →
           </Link>
         </div>
       </section>
