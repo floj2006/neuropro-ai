@@ -2,6 +2,15 @@ import { PrismaClient } from '@prisma/client';
 import { courses } from '../lib/data/courses';
 
 const prisma = new PrismaClient();
+const courseClient = (prisma as unknown as {
+  course: {
+    upsert: (args: {
+      where: { slug: string };
+      update: Record<string, unknown>;
+      create: Record<string, unknown>;
+    }) => Promise<unknown>;
+  };
+}).course;
 
 const levelMap: Record<string, 'BEGINNER' | 'AUTOMATION' | 'AI_BUSINESS' | 'ADVANCED'> = {
   'Beginner': 'BEGINNER',
@@ -16,7 +25,7 @@ function toJson<T>(value: T) {
 
 async function main() {
   for (const course of courses) {
-    await prisma.course.upsert({
+    await courseClient.upsert({
       where: { slug: course.slug },
       update: {
         title: course.title,
