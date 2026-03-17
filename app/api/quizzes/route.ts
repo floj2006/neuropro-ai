@@ -46,7 +46,7 @@ export async function GET(req: NextRequest) {
     });
 
     return NextResponse.json({ 
-      quizzes: quizzes.map(q => ({
+      quizzes: quizzes.map((q: (typeof quizzes)[number]) => ({
         id: q.id,
         courseId: q.courseId,
         moduleId: q.moduleId,
