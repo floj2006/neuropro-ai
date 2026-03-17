@@ -44,7 +44,7 @@ export default async function AdminPage() {
     email: user.email,
     role: user.role,
     createdAt: user.createdAt.toLocaleDateString('ru-RU')
-  }));
+  })); // Fixed: removed status and privileges fields
 
   return (
     <div className="section pb-16">
