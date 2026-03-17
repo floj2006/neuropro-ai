@@ -1,17 +1,30 @@
-﻿import { NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { prisma } from '../../../../lib/prisma';
 import { tgPayments } from '../../../../lib/tg-data';
 
+export const dynamic = 'force-dynamic';
+
 async function ensurePayments() {
-  const count = await prisma.tgPayment.count();
-  if (count > 0) {
-    return;
+  try {
+    const count = await prisma.tgPayment.count();
+    if (count > 0) {
+      return true;
+    }
+
+    await prisma.tgPayment.createMany({ data: tgPayments });
+    return true;
+  } catch {
+    return false;
   }
-  await prisma.tgPayment.createMany({ data: tgPayments });
 }
 
 export async function GET() {
-  await ensurePayments();
+  const hasDatabaseTable = await ensurePayments();
+
+  if (!hasDatabaseTable) {
+    return NextResponse.json(tgPayments);
+  }
+
   const rows = await prisma.tgPayment.findMany({ orderBy: { createdAt: 'asc' } });
   return NextResponse.json(rows);
 }

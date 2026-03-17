@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { prisma } from '../../../../lib/prisma';
 import { courses as seedCourses } from '../../../../lib/data/courses';
 
+export const dynamic = 'force-dynamic';
+
 const levelMap: Record<string, 'BEGINNER' | 'AUTOMATION' | 'AI_BUSINESS' | 'ADVANCED'> = {
   'Beginner': 'BEGINNER',
   'Automation': 'AUTOMATION',
@@ -16,35 +18,49 @@ function toJson<T>(value: T) {
 }
 
 async function ensureCourses() {
-  const count = await prisma.course.count();
-  if (count > 0) {
-    return;
+  try {
+    const count = await prisma.course.count();
+    if (count > 0) {
+      return true;
+    }
+
+    await Promise.all(
+      seedCourses.map((course) =>
+        prisma.course.create({
+          data: {
+            slug: course.slug,
+            title: course.title,
+            description: course.description,
+            price: course.price,
+            duration: course.duration,
+            level: levelMap[course.level],
+            modules: toJson(course.modules),
+            detailedModules: toJson(course.detailedModules),
+            outcomes: toJson(course.outcomes),
+            whatIncluded: toJson(course.whatIncluded)
+          }
+        })
+      )
+    );
+
+    return true;
+  } catch {
+    return false;
   }
-  await Promise.all(
-    seedCourses.map((course) =>
-      prisma.course.create({
-        data: {
-          slug: course.slug,
-          title: course.title,
-          description: course.description,
-          price: course.price,
-          duration: course.duration,
-          level: levelMap[course.level],
-          modules: toJson(course.modules),
-          detailedModules: toJson(course.detailedModules),
-          outcomes: toJson(course.outcomes),
-          whatIncluded: toJson(course.whatIncluded)
-        }
-      })
-    )
-  );
 }
 
 export async function GET() {
-  await ensureCourses();
-  const rows = await prisma.course.findMany({
-    orderBy: { createdAt: 'asc' }
-  });
+  const hasDatabaseTable = await ensureCourses();
+  const rows = hasDatabaseTable
+    ? await prisma.course.findMany({
+        orderBy: { createdAt: 'asc' }
+      })
+    : seedCourses.map((course) => ({
+        slug: course.slug,
+        title: course.title,
+        level: levelMap[course.level],
+        modules: toJson(course.modules)
+      }));
 
   const mapped = rows.map((course: (typeof rows)[number]) => {
     const modulesArray = Array.isArray(course.modules) ? course.modules : [];
