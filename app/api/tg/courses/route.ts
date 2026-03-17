@@ -46,7 +46,7 @@ export async function GET() {
     orderBy: { createdAt: 'asc' }
   });
 
-  const mapped = rows.map((course) => {
+  const mapped = rows.map((course: (typeof rows)[number]) => {
     const modulesArray = Array.isArray(course.modules) ? course.modules : [];
     return {
       id: course.slug,
