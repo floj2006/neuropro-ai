@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 
+const assignmentClient = (prisma as unknown as { assignment: any }).assignment;
+
 // GET - получить домашние задания пользователя
 export async function GET(req: NextRequest) {
   try {
@@ -27,7 +29,7 @@ export async function GET(req: NextRequest) {
       where.status = status;
     }
 
-    const assignments = await prisma.assignment.findMany({
+    const assignments = await assignmentClient.findMany({
       where,
       orderBy: { createdAt: 'desc' }
     });
@@ -70,7 +72,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Создаём задание
-    const assignment = await prisma.assignment.create({
+    const assignment = await assignmentClient.create({
       data: {
         userId: session.user.id,
         courseId,
@@ -137,7 +139,7 @@ export async function PATCH(req: NextRequest) {
       updateData.reviewedAt = new Date();
     }
 
-    const assignment = await prisma.assignment.update({
+    const assignment = await assignmentClient.update({
       where: { id },
       data: updateData
     });
