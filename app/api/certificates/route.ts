@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
     });
 
     const totalLessons = progress.length;
-    const completedLessons = progress.filter(p => p.completed).length;
+    const completedLessons = progress.filter((p: (typeof progress)[number]) => p.completed).length;
 
     if (totalLessons === 0 || completedLessons < totalLessons) {
       return NextResponse.json({ 
