@@ -1,4 +1,4 @@
-﻿import { Metadata } from 'next';
+import { Metadata } from 'next';
 import { auth } from '../../lib/auth';
 import { redirect } from 'next/navigation';
 import SectionHeading from '../../components/section-heading';
@@ -33,7 +33,7 @@ export default async function DashboardPage() {
   });
 
   const purchasedCourses = purchases
-    .map((p) => {
+    .map((p: (typeof purchases)[number]) => {
       const course = courses.find((c) => c.slug === p.courseId);
       if (!course) return null;
       return {
