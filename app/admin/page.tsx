@@ -104,7 +104,7 @@ export default async function AdminPage() {
             <div className="rounded-xl border border-white/10 bg-white/5 p-4">
               <p className="text-xs uppercase tracking-[0.2em]">Админы</p>
               <p className="mt-2 text-2xl font-semibold text-white">
-                {users.filter((user) => user.role === 'ADMIN').length}
+                {users.filter((user: (typeof users)[number]) => user.role === 'ADMIN').length}
               </p>
             </div>
           </div>
@@ -115,4 +115,5 @@ export default async function AdminPage() {
     </div>
   );
 }
+
 
