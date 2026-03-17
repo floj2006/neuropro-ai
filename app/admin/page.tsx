@@ -1,7 +1,6 @@
 ﻿import { redirect } from 'next/navigation';
 import { auth } from '../../lib/auth';
 import { prisma } from '../../lib/prisma';
-import type { User } from '@prisma/client';
 import { Card } from '../../components/ui/card';
 import AdminUsers from '../../components/admin/admin-users';
 
@@ -38,17 +37,20 @@ export default async function AdminPage() {
     'Доступ к аналитике'
   ];
 
-  const usersPayload = users.map((user: User) => ({
-    id: user.id,
-    name: user.name,
-    email: user.email,
-    role: user.role,
-    privileges: Array.isArray(user.privileges)
-      ? user.privileges.filter((item): item is string => typeof item === 'string')
-      : null,
-    createdAt: user.createdAt.toLocaleDateString('ru-RU')
-  }));
+  const usersPayload = users.map((user) => {
+    const rawPrivileges = (user as { privileges?: unknown }).privileges;
 
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      privileges: Array.isArray(rawPrivileges)
+        ? rawPrivileges.filter((item): item is string => typeof item === 'string')
+        : null,
+      createdAt: user.createdAt.toLocaleDateString('ru-RU')
+    };
+  });
   return (
     <div className="section pb-16">
       <div className="space-y-2">
