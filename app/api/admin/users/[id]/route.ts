@@ -24,7 +24,6 @@ export async function PATCH(request: Request, { params }: { params: { id: string
       data: {
         name: typeof body?.name === 'string' ? body.name : undefined,
         role: role ?? undefined,
-        status: typeof body?.status === 'string' ? body.status : undefined,
         privileges: Array.isArray(body?.privileges) ? body.privileges : undefined
       }
     });
@@ -34,7 +33,6 @@ export async function PATCH(request: Request, { params }: { params: { id: string
       name: update.name,
       email: update.email,
       role: update.role,
-      status: update.status,
       privileges: Array.isArray(update.privileges) ? update.privileges : [],
       createdAt: update.createdAt.toLocaleDateString('ru-RU')
     });
@@ -44,3 +42,4 @@ export async function PATCH(request: Request, { params }: { params: { id: string
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
+
