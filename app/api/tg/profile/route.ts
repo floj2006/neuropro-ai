@@ -1,4 +1,4 @@
-﻿import { NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { prisma } from '../../../../lib/prisma';
 import { courses as seedCourses } from '../../../../lib/data/courses';
 
@@ -31,13 +31,13 @@ export async function GET(request: Request) {
       status: user.status,
       privileges: DEFAULT_PRIVILEGES
     },
-    purchases: purchases.map((item) => ({
+    purchases: purchases.map((item: (typeof purchases)[number]) => ({
       courseSlug: item.courseSlug,
       title: courseMap.get(item.courseSlug)?.title ?? item.courseSlug,
       price: item.price,
       status: item.status
     })),
-    progress: progress.map((item) => ({
+    progress: progress.map((item: (typeof progress)[number]) => ({
       courseSlug: item.courseSlug,
       title: courseMap.get(item.courseSlug)?.title ?? item.courseSlug,
       progress: item.progress,
