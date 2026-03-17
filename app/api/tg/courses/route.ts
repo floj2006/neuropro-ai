@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import { Prisma } from '@prisma/client';
 import { prisma } from '../../../../lib/prisma';
 import { courses as seedCourses } from '../../../../lib/data/courses';
 
@@ -11,6 +10,10 @@ const levelMap: Record<string, 'BEGINNER' | 'AUTOMATION' | 'AI_BUSINESS' | 'ADVA
 };
 
 const mentorMap = new Map(seedCourses.map((course) => [course.slug, course.instructor.name]));
+
+function toJson<T>(value: T) {
+  return JSON.parse(JSON.stringify(value)) as never;
+}
 
 async function ensureCourses() {
   const count = await prisma.course.count();
@@ -27,10 +30,10 @@ async function ensureCourses() {
           price: course.price,
           duration: course.duration,
           level: levelMap[course.level],
-          modules: course.modules as unknown as Prisma.InputJsonValue,
-          detailedModules: course.detailedModules as unknown as Prisma.InputJsonValue,
-          outcomes: course.outcomes as unknown as Prisma.InputJsonValue,
-          whatIncluded: course.whatIncluded as unknown as Prisma.InputJsonValue
+          modules: toJson(course.modules),
+          detailedModules: toJson(course.detailedModules),
+          outcomes: toJson(course.outcomes),
+          whatIncluded: toJson(course.whatIncluded)
         }
       })
     )
