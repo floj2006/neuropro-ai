@@ -28,11 +28,15 @@ export async function POST(req: NextRequest) {
         name,
         email,
         password: hashedPassword,
-        role: 'USER',
-        status: 'Активен',
-        privileges: DEFAULT_PRIVILEGES
+        role: 'USER'
       }
     });
+
+    await prisma.$executeRaw`
+      UPDATE "User"
+      SET "privileges" = ${JSON.stringify(DEFAULT_PRIVILEGES)}
+      WHERE "id" = ${user.id}
+    `;
 
     if (telegramId) {
       await prisma.tgUser.upsert({
