@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { courses, courseCategories, categoryTranslations } from '@/lib/data/courses';
 import CourseCard from '@/components/course-card';
 import { Card } from '@/components/ui/card';
@@ -13,12 +13,36 @@ const levelLabels = {
   'Advanced': 'Продвинутый'
 };
 
+const categoryIcons: Record<string, string> = {
+  'all': '📚',
+  'Beginner': '🌱',
+  'Automation': '⚙️',
+  'AI Business': '💼',
+  'Advanced': '🚀'
+};
+
 type SortOption = 'default' | 'price-asc' | 'price-desc' | 'duration';
 
 export default function CoursesClient() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [sortBy, setSortBy] = useState<SortOption>('default');
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [displayCategory, setDisplayCategory] = useState('all');
+  const [iconKey, setIconKey] = useState(0);
+
+  // Анимация при смене категории
+  useEffect(() => {
+    if (selectedCategory !== displayCategory) {
+      setIsAnimating(true);
+      const timer = setTimeout(() => {
+        setDisplayCategory(selectedCategory);
+        setIconKey((prev) => prev + 1);
+        setTimeout(() => setIsAnimating(false), 300);
+      }, 150);
+      return () => clearTimeout(timer);
+    }
+  }, [selectedCategory, displayCategory]);
 
   const sortOptions = [
     { value: 'default', label: 'По умолчанию', icon: '📋' },
@@ -126,25 +150,41 @@ export default function CoursesClient() {
             <div className="mt-2 flex flex-wrap gap-2">
               <button
                 onClick={() => setSelectedCategory('all')}
-                className={`rounded-full px-4 py-2 text-sm transition ${
+                className={`group relative flex items-center gap-2 rounded-full px-4 py-2 text-sm transition-all duration-300 ${
                   selectedCategory === 'all'
-                    ? 'bg-[color:var(--neon)] text-white'
-                    : 'border border-white/10 bg-white/5 text-[color:var(--muted)] hover:border-white/20'
+                    ? 'bg-[color:var(--neon)] text-white shadow-lg shadow-[color:var(--neon)]/30'
+                    : 'border border-white/10 bg-white/5 text-[color:var(--muted)] hover:border-white/20 hover:bg-white/10'
                 }`}
               >
-                Все
+                <span
+                  key={`icon-all-${iconKey}`}
+                  className={`flex items-center transition-all duration-300 ${
+                    isAnimating && selectedCategory === 'all' ? 'scale-0 opacity-0' : 'scale-100 opacity-100'
+                  }`}
+                >
+                  {categoryIcons['all']}
+                </span>
+                <span>Все</span>
               </button>
               {courseCategories.map((cat) => (
                 <button
                   key={cat}
                   onClick={() => setSelectedCategory(cat)}
-                  className={`rounded-full px-4 py-2 text-sm transition ${
+                  className={`group relative flex items-center gap-2 rounded-full px-4 py-2 text-sm transition-all duration-300 ${
                     selectedCategory === cat
-                      ? 'bg-[color:var(--neon)] text-white'
-                      : 'border border-white/10 bg-white/5 text-[color:var(--muted)] hover:border-white/20'
+                      ? 'bg-[color:var(--neon)] text-white shadow-lg shadow-[color:var(--neon)]/30'
+                      : 'border border-white/10 bg-white/5 text-[color:var(--muted)] hover:border-white/20 hover:bg-white/10'
                   }`}
                 >
-                  {categoryTranslations[cat]}
+                  <span
+                    key={`icon-${cat}-${iconKey}`}
+                    className={`flex items-center transition-all duration-300 ${
+                      isAnimating && selectedCategory === cat ? 'scale-0 opacity-0' : 'scale-100 opacity-100'
+                    }`}
+                  >
+                    {categoryIcons[cat]}
+                  </span>
+                  <span>{categoryTranslations[cat]}</span>
                 </button>
               ))}
             </div>
