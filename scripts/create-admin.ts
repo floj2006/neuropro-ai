@@ -9,6 +9,13 @@ const rl = readline.createInterface({
   output: process.stdout
 });
 
+const ADMIN_PRIVILEGES = [
+  'Полный доступ к пользователям',
+  'Управление ролями',
+  'Просмотр покупок и прогресса',
+  'Доступ к аналитике'
+];
+
 function askQuestion(query: string): Promise<string> {
   return new Promise((resolve) => {
     rl.question(query, (answer) => {
@@ -45,16 +52,15 @@ async function createAdmin() {
       name,
       email,
       password: hashedPassword,
-      role: 'ADMIN',
-      status: 'Активен',
-      privileges: [
-        'Полный доступ к пользователям',
-        'Управление ролями',
-        'Просмотр покупок и прогресса',
-        'Доступ к аналитике'
-      ]
+      role: 'ADMIN'
     }
   });
+
+  await prisma.$executeRaw`
+    UPDATE "User"
+    SET "privileges" = ${JSON.stringify(ADMIN_PRIVILEGES)}
+    WHERE "id" = ${admin.id}
+  `;
 
   console.log('\n✅ Администратор успешно создан!');
   console.log(`   ID: ${admin.id}`);
