@@ -41,7 +41,7 @@ export async function GET(req: NextRequest) {
     });
 
     // Форматируем прогресс
-    const progressMap = progress.reduce((acc, p) => {
+    const progressMap = progress.reduce((acc: Record<string, boolean>, p: (typeof progress)[number]) => {
       const key = `${p.moduleId}-${p.lessonId}`;
       acc[key] = p.completed;
       return acc;
@@ -49,7 +49,7 @@ export async function GET(req: NextRequest) {
 
     // Считаем общий процент
     const totalLessons = progress.length;
-    const completedLessons = progress.filter(p => p.completed).length;
+    const completedLessons = progress.filter((p: (typeof progress)[number]) => p.completed).length;
     const percentage = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
 
     return NextResponse.json({
@@ -127,7 +127,7 @@ export async function POST(req: NextRequest) {
     });
 
     const totalLessons = allProgress.length;
-    const completedLessons = allProgress.filter(p => p.completed).length;
+    const completedLessons = allProgress.filter((p: (typeof allProgress)[number]) => p.completed).length;
     const percentage = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
 
     return NextResponse.json({
