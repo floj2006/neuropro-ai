@@ -14,12 +14,14 @@ const levelLabels = {
 };
 
 const categoryIcons: Record<string, string> = {
-  'all': '📚',
-  'Beginner': '🌱',
-  'Automation': '⚙️',
-  'AI Business': '💼',
-  'Advanced': '🚀'
+  'all': '◰',
+  'Beginner': '◐',
+  'Automation': '◫',
+  'AI Business': '◪',
+  'Advanced': '◬'
 };
+
+const glitchChars = 'ﾊﾐﾋｰｳｼﾅﾓﾆｻﾜﾂｵﾘｱﾎﾃﾏｹﾒｴｶｷﾑﾕﾗｾﾈｽﾀﾇﾍｦｲｸｺ';
 
 type SortOption = 'default' | 'price-asc' | 'price-desc' | 'duration';
 
@@ -30,17 +32,47 @@ export default function CoursesClient() {
   const [isAnimating, setIsAnimating] = useState(false);
   const [displayCategory, setDisplayCategory] = useState('all');
   const [iconKey, setIconKey] = useState(0);
+  const [glitchText, setGlitchText] = useState('');
 
-  // Анимация при смене категории
+  // Анимация при смене категории - эффект глитч матрицы
   useEffect(() => {
-    if (selectedCategory !== displayCategory) {
+    if (selectedCategory !== displayCategory && selectedCategory !== 'all') {
       setIsAnimating(true);
-      const timer = setTimeout(() => {
-        setDisplayCategory(selectedCategory);
-        setIconKey((prev) => prev + 1);
-        setTimeout(() => setIsAnimating(false), 300);
-      }, 150);
-      return () => clearTimeout(timer);
+      
+      // Глитч-эффект с рандомными символами
+      let iterations = 0;
+      const maxIterations = 20;
+      const interval = setInterval(() => {
+        const targetText = categoryTranslations[selectedCategory as keyof typeof categoryTranslations] || '';
+        
+        setGlitchText(
+          targetText
+            .split('')
+            .map((char, index) => {
+              if (index < iterations) {
+                return targetText[index];
+              }
+              return glitchChars[Math.floor(Math.random() * glitchChars.length)];
+            })
+            .join('')
+        );
+        
+        iterations += 1 / 2;
+        
+        if (iterations >= maxIterations) {
+          clearInterval(interval);
+          setDisplayCategory(selectedCategory);
+          setIconKey((prev) => prev + 1);
+          setGlitchText('');
+          setTimeout(() => setIsAnimating(false), 100);
+        }
+      }, 30);
+      
+      return () => clearInterval(interval);
+    } else if (selectedCategory !== displayCategory && selectedCategory === 'all') {
+      setDisplayCategory('all');
+      setIconKey((prev) => prev + 1);
+      setIsAnimating(false);
     }
   }, [selectedCategory, displayCategory]);
 
@@ -150,7 +182,7 @@ export default function CoursesClient() {
             <div className="mt-2 flex flex-wrap gap-2">
               <button
                 onClick={() => setSelectedCategory('all')}
-                className={`group relative flex items-center gap-2 rounded-full px-4 py-2 text-sm transition-all duration-300 ${
+                className={`group relative flex items-center gap-2 overflow-hidden rounded-full px-4 py-2 text-sm transition-all duration-300 ${
                   selectedCategory === 'all'
                     ? 'bg-[color:var(--neon)] text-white shadow-lg shadow-[color:var(--neon)]/30'
                     : 'border border-white/10 bg-white/5 text-[color:var(--muted)] hover:border-white/20 hover:bg-white/10'
@@ -158,19 +190,21 @@ export default function CoursesClient() {
               >
                 <span
                   key={`icon-all-${iconKey}`}
-                  className={`flex items-center transition-all duration-300 ${
-                    isAnimating && selectedCategory === 'all' ? 'scale-0 opacity-0' : 'scale-100 opacity-100'
+                  className={`flex items-center transition-all duration-100 ${
+                    isAnimating && selectedCategory === 'all' ? 'animate-pulse opacity-50' : 'opacity-100'
                   }`}
                 >
                   {categoryIcons['all']}
                 </span>
-                <span>Все</span>
+                <span className="relative">
+                  {isAnimating && selectedCategory === 'all' ? 'Все' : 'Все'}
+                </span>
               </button>
               {courseCategories.map((cat) => (
                 <button
                   key={cat}
                   onClick={() => setSelectedCategory(cat)}
-                  className={`group relative flex items-center gap-2 rounded-full px-4 py-2 text-sm transition-all duration-300 ${
+                  className={`group relative flex items-center gap-2 overflow-hidden rounded-full px-4 py-2 text-sm transition-all duration-300 ${
                     selectedCategory === cat
                       ? 'bg-[color:var(--neon)] text-white shadow-lg shadow-[color:var(--neon)]/30'
                       : 'border border-white/10 bg-white/5 text-[color:var(--muted)] hover:border-white/20 hover:bg-white/10'
@@ -178,13 +212,17 @@ export default function CoursesClient() {
                 >
                   <span
                     key={`icon-${cat}-${iconKey}`}
-                    className={`flex items-center transition-all duration-300 ${
-                      isAnimating && selectedCategory === cat ? 'scale-0 opacity-0' : 'scale-100 opacity-100'
+                    className={`flex items-center transition-all duration-100 ${
+                      isAnimating && selectedCategory === cat ? 'animate-pulse opacity-50' : 'opacity-100'
                     }`}
                   >
                     {categoryIcons[cat]}
                   </span>
-                  <span>{categoryTranslations[cat]}</span>
+                  <span className="relative font-mono">
+                    {isAnimating && selectedCategory === cat && glitchText 
+                      ? glitchText 
+                      : categoryTranslations[cat as keyof typeof categoryTranslations]}
+                  </span>
                 </button>
               ))}
             </div>
