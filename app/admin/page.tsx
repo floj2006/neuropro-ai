@@ -43,8 +43,11 @@ export default async function AdminPage() {
     name: user.name,
     email: user.email,
     role: user.role,
+    privileges: Array.isArray(user.privileges)
+      ? user.privileges.filter((item): item is string => typeof item === 'string')
+      : null,
     createdAt: user.createdAt.toLocaleDateString('ru-RU')
-  })); // Fixed: removed status and privileges fields
+  }));
 
   return (
     <div className="section pb-16">
