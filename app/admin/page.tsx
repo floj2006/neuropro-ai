@@ -43,7 +43,6 @@ export default async function AdminPage() {
     name: user.name,
     email: user.email,
     role: user.role,
-    privileges: Array.isArray(user.privileges) ? (user.privileges as string[]) : null,
     createdAt: user.createdAt.toLocaleDateString('ru-RU')
   }));
 
