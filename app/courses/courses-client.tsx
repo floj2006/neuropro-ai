@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react';
 import { courses, courseCategories, categoryTranslations } from '@/lib/data/courses';
 import CourseCard from '@/components/course-card';
 import { Card } from '@/components/ui/card';
+import CustomSelect from '@/components/ui/custom-select';
 
 const levelLabels = {
   'Beginner': 'Начинающий',
@@ -18,6 +19,13 @@ export default function CoursesClient() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [sortBy, setSortBy] = useState<SortOption>('default');
+
+  const sortOptions = [
+    { value: 'default', label: 'По умолчанию', icon: '📋' },
+    { value: 'price-asc', label: 'Сначала дешевле', icon: '💰' },
+    { value: 'price-desc', label: 'Сначала дороже', icon: '💎' },
+    { value: 'duration', label: 'По длительности', icon: '⏱' }
+  ];
 
   const filteredCourses = useMemo(() => {
     let result = [...courses];
@@ -101,19 +109,12 @@ export default function CoursesClient() {
 
             {/* Сортировка */}
             <div>
-              <label className="text-xs uppercase tracking-[0.2em] text-[color:var(--muted)]">
-                Сортировка
-              </label>
-              <select
+              <CustomSelect
+                options={sortOptions}
                 value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as SortOption)}
-                className="mt-2 w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-white focus:border-[color:var(--neon)] focus:outline-none"
-              >
-                <option value="default">По умолчанию</option>
-                <option value="price-asc">Сначала дешевле</option>
-                <option value="price-desc">Сначала дороже</option>
-                <option value="duration">По длительности</option>
-              </select>
+                onChange={(value) => setSortBy(value as SortOption)}
+                label="Сортировка"
+              />
             </div>
           </div>
 
