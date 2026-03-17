@@ -1,13 +1,13 @@
-﻿import { NextResponse } from 'next/server';
-import { CourseCategory, Prisma } from '@prisma/client';
+import { NextResponse } from 'next/server';
+import { Prisma } from '@prisma/client';
 import { prisma } from '../../../../lib/prisma';
 import { courses as seedCourses } from '../../../../lib/data/courses';
 
-const levelMap: Record<string, CourseCategory> = {
-  'Beginner': CourseCategory.BEGINNER,
-  'Automation': CourseCategory.AUTOMATION,
-  'AI Business': CourseCategory.AI_BUSINESS,
-  'Advanced': CourseCategory.ADVANCED
+const levelMap: Record<string, 'BEGINNER' | 'AUTOMATION' | 'AI_BUSINESS' | 'ADVANCED'> = {
+  'Beginner': 'BEGINNER',
+  'Automation': 'AUTOMATION',
+  'AI Business': 'AI_BUSINESS',
+  'Advanced': 'ADVANCED'
 };
 
 const mentorMap = new Map(seedCourses.map((course) => [course.slug, course.instructor.name]));
@@ -49,11 +49,11 @@ export async function GET() {
       id: course.slug,
       title: course.title,
       category:
-        course.level === CourseCategory.BEGINNER
+        course.level === 'BEGINNER'
           ? 'Начинающий'
-          : course.level === CourseCategory.AUTOMATION
+          : course.level === 'AUTOMATION'
             ? 'Автоматизация'
-            : course.level === CourseCategory.AI_BUSINESS
+            : course.level === 'AI_BUSINESS'
               ? 'AI-бизнес'
               : 'Продвинутый',
       progress: Math.min(100, Math.max(0, modulesArray.length * 12)),
