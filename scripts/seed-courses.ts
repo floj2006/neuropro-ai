@@ -1,14 +1,18 @@
-﻿import { PrismaClient, CourseCategory, Prisma } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { courses } from '../lib/data/courses';
 
 const prisma = new PrismaClient();
 
-const levelMap: Record<string, CourseCategory> = {
-  'Beginner': CourseCategory.BEGINNER,
-  'Automation': CourseCategory.AUTOMATION,
-  'AI Business': CourseCategory.AI_BUSINESS,
-  'Advanced': CourseCategory.ADVANCED
+const levelMap: Record<string, 'BEGINNER' | 'AUTOMATION' | 'AI_BUSINESS' | 'ADVANCED'> = {
+  'Beginner': 'BEGINNER',
+  'Automation': 'AUTOMATION',
+  'AI Business': 'AI_BUSINESS',
+  'Advanced': 'ADVANCED'
 };
+
+function toJson<T>(value: T) {
+  return JSON.parse(JSON.stringify(value)) as never;
+}
 
 async function main() {
   for (const course of courses) {
@@ -20,10 +24,10 @@ async function main() {
         price: course.price,
         duration: course.duration,
         level: levelMap[course.level],
-        modules: course.modules as unknown as Prisma.InputJsonValue,
-        detailedModules: course.detailedModules as unknown as Prisma.InputJsonValue,
-        outcomes: course.outcomes as unknown as Prisma.InputJsonValue,
-        whatIncluded: course.whatIncluded as unknown as Prisma.InputJsonValue
+        modules: toJson(course.modules),
+        detailedModules: toJson(course.detailedModules),
+        outcomes: toJson(course.outcomes),
+        whatIncluded: toJson(course.whatIncluded)
       },
       create: {
         slug: course.slug,
@@ -32,10 +36,10 @@ async function main() {
         price: course.price,
         duration: course.duration,
         level: levelMap[course.level],
-        modules: course.modules as unknown as Prisma.InputJsonValue,
-        detailedModules: course.detailedModules as unknown as Prisma.InputJsonValue,
-        outcomes: course.outcomes as unknown as Prisma.InputJsonValue,
-        whatIncluded: course.whatIncluded as unknown as Prisma.InputJsonValue
+        modules: toJson(course.modules),
+        detailedModules: toJson(course.detailedModules),
+        outcomes: toJson(course.outcomes),
+        whatIncluded: toJson(course.whatIncluded)
       }
     });
   }
