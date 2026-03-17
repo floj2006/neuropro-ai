@@ -37,7 +37,7 @@ export default async function AdminPage() {
     'Доступ к аналитике'
   ];
 
-  const usersPayload = users.map((user) => {
+  const usersPayload = users.map((user: (typeof users)[number]) => {
     const rawPrivileges = (user as { privileges?: unknown }).privileges;
 
     return {
@@ -115,3 +115,4 @@ export default async function AdminPage() {
     </div>
   );
 }
+
