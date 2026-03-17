@@ -19,22 +19,41 @@ export async function PATCH(request: Request, { params }: { params: { id: string
       return NextResponse.json({ error: 'Invalid role' }, { status: 400 });
     }
 
-    const update = await prisma.user.update({
+    await prisma.user.update({
       where: { id: params.id },
       data: {
         name: typeof body?.name === 'string' ? body.name : undefined,
-        role: role ?? undefined,
-        privileges: Array.isArray(body?.privileges) ? body.privileges : undefined
+        role: role ?? undefined
       }
     });
 
+    if (Array.isArray(body?.privileges)) {
+      await prisma.$executeRaw`
+        UPDATE "User"
+        SET "privileges" = ${JSON.stringify(body.privileges)}
+        WHERE "id" = ${params.id}
+      `;
+    }
+
+    const updated = await prisma.user.findUnique({
+      where: { id: params.id }
+    });
+
+    if (!updated) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
+    const rawPrivileges = (updated as { privileges?: unknown }).privileges;
+
     return NextResponse.json({
-      id: update.id,
-      name: update.name,
-      email: update.email,
-      role: update.role,
-      privileges: Array.isArray(update.privileges) ? update.privileges : [],
-      createdAt: update.createdAt.toLocaleDateString('ru-RU')
+      id: updated.id,
+      name: updated.name,
+      email: updated.email,
+      role: updated.role,
+      privileges: Array.isArray(rawPrivileges)
+        ? rawPrivileges.filter((item): item is string => typeof item === 'string')
+        : [],
+      createdAt: updated.createdAt.toLocaleDateString('ru-RU')
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Не удалось сохранить изменения';
@@ -42,4 +61,3 @@ export async function PATCH(request: Request, { params }: { params: { id: string
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
-
